@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: #ffe6e6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        /* Password Page */
+        .form-wrapper {
+            display: flex;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-section {
+            flex: 1;
+            padding: 20px;
+            background: linear-gradient(45deg, #ffecef, #ffe6e6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .photo-frame {
+            width: 100%;
+            max-width: 300px;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: rotate(-3deg);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-frame:hover {
+            transform: rotate(0);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            border-radius: 10px;
+            display: block;
+        }
+
+        .password-section {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .title {
+            color: #ff4d79;
+            font-size: 24px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .title::after {
+            content: '❤️';
+            position: absolute;
+            top: -15px;
+            right: -25px;
+            animation: float 2s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .password-display {
+            width: 200px;
+            height: 40px;
+            background: #ffecef;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            letter-spacing: 5px;
+            margin: 20px 0;
+            border: 2px dashed #ff4d79;
+            color: #ff4d79;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .key {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #ff4d79, #ff758c);
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 77, 121, 0.2);
+        }
+
+        .key:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 77, 121, 0.3);
+        }
+
+        .key:active {
+            transform: translateY(0);
+        }
+
+        .hint {
+            margin-top: 20px;
+            color: #ff758c;
+            font-style: italic;
+        }
+
+        /* Main Page */
+        .main-page {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-button {
+            background: linear-gradient(135deg, #ff4d79, #ff758c);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 77, 121, 0.3);
+        }
+
+        .content-box {
+            display: none;
+            margin-top: 30px;
+        }
+
+        /* Message Card */
+        /* Updated Message Card Styling */
+        .message-card {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            margin: 0 auto;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff4d79, #ff758c); /* Soft pink background */
+            border-radius: 20px;
+            box-shadow: 0 6px 15px rgba(255, 77, 121, 0.2);
+        }
+
+        .message-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #ff4d79, #ff758c); /* Soft pink gradient */
+            color: white;
+            font-family: 'Dancing Script', cursive; /* Cursive font for a cute touch */
+        }
+
+        .card-back {
+            background: white;
+            color: #ff4d79;
+            transform: rotateY(180deg);
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-front h2, .card-back h2 {
+            font-size: 24px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .card-front p, .card-back p {
+            font-size: 14px;
+            line-height: 1.4;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .heart-icon {
+            font-size: 40px;
+            margin: 10px 0;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        /* Heart icon pulse effect */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Add subtle background hearts */
+        .card-front::before {
+            content: '❤️❤️❤️'; 
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 30px;
+            color: white;
+            opacity: 0.6;
+            animation: float 3s infinite ease-in-out;
+        }
+
+        .card-back::before {
+            content: '❤️❤️❤️';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 30px;
+            color: #ff4d79;
+            opacity: 0.6;
+            animation: float 3s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Custom font for more whimsical feel */
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+
+
+
+        /* Photos Section */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Resize images */
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .memory-photo {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Grouping Memory Photos into Sections */
+        .memory-section {
+            margin-bottom: 30px;
+        }
+
+        .memory-section h3 {
+            font-size: 24px;
+            color: #ff4d79;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* Date Section */
+        .date-content {
+            padding: 20px;
+            color: #ff4d79;
+        }
+
+        .days-count {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        /* Final Page */
+        .final-page {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .final-text {
+            font-size: 30px;
+            color: #ff4d79;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .form-wrapper {
+                flex-direction: column;
+            }
+            
+            .image-section,
+            .password-section {
+                padding: 20px;
+            }
+
+            .message-card {
+                width: 280px;
+                height: 380px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Password Page -->
+        <div class="page active" id="password-page">
+            <div class="form-wrapper">
+                <div class="image-section">
+                    <div class="photo-frame">
+                        <img src="C:\Users\nguye\Documents\web\picture\pic1.jpg" alt="Valentine Photo">
+                    </div>
+                </div>
+                <div class="password-section">
+                    <h1 class="title">Happy Valentine's Day</h1>
+                    <div class="password-display" id="password-display"></div>
+                    <div class="keypad">
+                        <button class="key">1</button>
+                        <button class="key">2</button>
+                        <button class="key">3</button>
+                        <button class="key">4</button>
+                        <button class="key">5</button>
+                        <button class="key">6</button>
+                        <button class="key">7</button>
+                        <button class="key">8</button>
+                        <button class="key">9</button>
+                        <button class="key" style="grid-column: 2">0</button>
+                    </div>
+                    <div class="hint">Enter our special date ❤️</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Page -->
+        <div class="page" id="main-page">
+            <div class="main-page">
+                <h1 class="title">Our Valentine's Story</h1>
+                <div>
+                    <button class="menu-button" onclick="showContent('message')">Message</button>
+                    <button class="menu-button" onclick="showContent('photos')">Photos</button>
+                    <button class="menu-button" onclick="showContent('date')">Date</button>
+                </div>
+
+                <!-- New button to go to the Final Page -->
+                <button class="menu-button" onclick="goToFinalPage()">Go to Final Page</button>
+
+                <!-- Message Content -->
+                <div class="content-box" id="message-content">
+                    <div class="message-card">
+                        <div class="card-front">
+                            <div class="heart-icon">❤️</div>
+                            <h2>Tap to Read</h2>
+                            <p>A special message for you...</p>
+                            <div class="heart-icon">❤️</div>
+                        </div>
+                        <div class="card-back">
+                            <h2>My Valentine</h2>
+                            <p>Happy Valentine's Day to the most special person in my life! ❤️</p>
+                            <p>Every moment with you is a treasure, and I'm grateful for all the love and joy you bring to my life.</p>
+                            <p>Forever yours</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photos Content -->
+                <div class="content-box" id="photos-content">
+                    <!-- Section for Memory 1 -->
+                    <div class="memory-section">
+                        <h3>Memory 1</h3>
+                        <div class="photo-gallery">
+                            <img src="C:\Users\nguye\Documents\web\picture\pic4.jpg" alt="Memory 1" class="memory-photo">
+                            <img src="C:\Users\nguye\Documents\web\picture\pic6.jpg" alt="Memory 1" class="memory-photo">
+                            <img src="C:\Users\nguye\Documents\web\picture\pic2.jpg" alt="Memory 1" class="memory-photo">
+                            <img src="C:\Users\nguye\Documents\web\picture\pic10.jpg" alt="Memory 1" class="memory-photo">
+                        </div>
+                    </div>
+
+                    <!-- Section for Memory 2 -->
+                    <div class="memory-section">
+                        <h3>Memory 2</h3>
+                        <div class="photo-gallery">
+                            <img src="C:\Users\nguye\Documents\web\picture\pic3.jpg" alt="Memory 2" class="memory-photo">
+                            <img src="C:\Users\nguye\Documents\web\picture\pic12.jpg" alt="Memory 2" class="memory-photo">
+                            <img src="C:\Users\nguye\Documents\web\picture\pic9.jpg" alt="Memory 2" class="memory-photo">
+                            <img src="C:\Users\nguye\Documents\web\picture\pic11.jpg" alt="Memory 2" class="memory-photo">
+                        </div>
+                    </div>
+
+                    <!-- Section for Memory 3 -->
+                    <div class="memory-section">
+                        <h3>Memory 3</h3>
+                        <div class="photo-gallery">
+                            <img src="C:\Users\nguye\Documents\web\picture\pic1.jpg" alt="Memory 3" class="memory-photo">
+                            <img src="C:\Users\nguye\Documents\web\picture\pic8.jpg" alt="Memory 3" class="memory-photo">
+                            <img src="C:\Users\nguye\Documents\web\picture\pic5.jpg" alt="Memory 3" class="memory-photo">
+                            <img src="C:\Users\nguye\Documents\web\picture\pic7.jpg" alt="Memory 3" class="memory-photo">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date Content -->
+                <div class="content-box" id="date-content">
+                    <div class="date-content">
+                        <h2>Our Journey Together</h2>
+                        <p>Started on: January 17, 2024</p>
+                        <div class="days-count">
+                            <span id="days-together"></span> days of happiness
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Page -->
+        <div class="page" id="final-page">
+            <div class="final-page">
+                <div class="final-text">Hết rùi!!!</div>
+                <p>❤️ Thank you for the memories ❤️</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let password = '';
+        const correctPassword = '1701';
+
+        // Password handling
+        document.querySelectorAll('.key').forEach(key => {
+            key.addEventListener('click', () => {
+                if (password.length < 4) {
+                    password += key.textContent;
+                    document.getElementById('password-display').textContent = '•'.repeat(password.length);
+                    
+                    if (password.length === 4) {
+                        checkPassword();
+                    }
+                }
+            });
+        });
+
+        function checkPassword() {
+            if (password === correctPassword) {
+                switchPage('password-page', 'main-page');
+            } else {
+                password = '';
+                document.getElementById('password-display').textContent = '';
+                alert('Wrong password! Try again.');
+            }
+        }
+
+        function switchPage(from, to) {
+            document.getElementById(from).classList.remove('active');
+            document.getElementById(to).classList.add('active');
+        }
+
+        // Content display handling
+        function showContent(type) {
+            // Hide all content boxes
+            document.querySelectorAll('.content-box').forEach(box => {
+                box.style.display = 'none';
+            });
+
+            // Show selected content
+            const contentBox = document.getElementById(`${type}-content`);
+            contentBox.style.display = 'block';
+
+            // Calculate days together if date content is shown
+            if (type === 'date') {
+                const startDate = new Date('2024-01-17');
+                const today = new Date();
+                const diffTime = Math.abs(today - startDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('days-together').textContent = diffDays;
+            }
+
+            // Show final page after viewing all content
+            if (!localStorage.getItem(type)) {
+                localStorage.setItem(type, 'viewed');
+                checkAllViewed();
+            }
+        }
+
+        // Message card flip
+        document.addEventListener('DOMContentLoaded', () => {
+            const messageCard = document.querySelector('.message-card');
+            if (messageCard) {
+                messageCard.addEventListener('click', () => {
+                    messageCard.classList.toggle('flipped');
+                });
+            }
+        });
+
+        function switchPage(from, to) {
+            document.getElementById(from).classList.remove('active');
+            document.getElementById(to).classList.add('active');
+        }
+
+        // New function to go to the Final Page
+        function goToFinalPage() {
+            switchPage('main-page', 'final-page');
+        }
+
+        function checkAllViewed() {
+            const allTypes = ['message', 'photos', 'date'];
+            const allViewed = allTypes.every(type => localStorage.getItem(type));
+            
+            if (allViewed) {
+                setTimeout(() => {
+                    switchPage('main-page', 'final-page');
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
